@@ -4,8 +4,6 @@ metadata
 
 group :integration do
   cookbook 'apt'
-  cookbook 'selinux'
-  cookbook 'ips-omniti'
 end
 
 cookbook 'httpd_config_test', path: 'test/fixtures/cookbooks/httpd_config_test'

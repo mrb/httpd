@@ -1,0 +1,102 @@
+---
+provisioner:
+  name: chef_zero
+  require_chef_omnibus: true
+
+platforms:
+- name: centos
+  driver_plugin: dokken
+  transport: dokken
+
+- name: fedora
+  driver: dokken
+  transport: dokken
+
+- name: debian
+  driver_plugin: dokken
+  transport: dokken
+  run_list:
+  - recipe[apt]
+
+- name: ubuntu
+  driver_plugin: dokken
+  transport: dokken
+  run_list:
+  - recipe[apt]
+
+suites:
+  #
+  # service24-single-docker
+  #
+  - name: service24-single-docker
+    run_list:
+    - recipe[httpd_service_test::single-docker]
+    includes: [
+      'centos-7.0',
+      'fedora-21',
+      'ubuntu-15.04',
+    ]
+    attributes:
+      httpd:
+        version: '2.4'
+
+  #
+  # service24-multi-docker
+  #
+  - name: service24-multi-docker
+    run_list:
+    - recipe[httpd_service_test::multi-docker]
+    includes: [
+      'centos-7.0',
+      'fedora-21',
+      'ubuntu-15.04'
+    ]
+    attributes:
+      httpd:
+        version: '2.4'
+        service_name: 'multi'
+        listen_ports: [ '81', '444' ]
+        run_user: 'bob'
+        run_group: 'bob'
+        contact: 'alice@computers.biz'
+        timeout: '1234'
+        keepalive: false
+        keepaliverequests: '5678'
+        keepalivetimeout: '8765'
+        mpm: 'prefork'
+        startservers: '20'
+        minspareservers: '20'
+        minspareservers: '40'
+  #
+  # modules
+  #
+  - name: module22
+    run_list:
+    - recipe[httpd_module_test]
+    includes: [
+      'amazon-2014.09',
+      'centos-5.8',
+      'centos-6.5',
+      'debian-7.0',
+      'omnios-151006',
+      'smartos-13.4.0',
+      'ubuntu-10.04',
+      'ubuntu-12.04'
+    ]
+    attributes:
+      httpd:
+        version: '2.2'
+
+  - name: module24
+    run_list:
+    - recipe[httpd_module_test]
+    attributes:
+      httpd:
+        version: '2.4'
+
+  #
+  # config
+  #
+  - name: config
+    run_list:
+    - recipe[httpd_config_test]
